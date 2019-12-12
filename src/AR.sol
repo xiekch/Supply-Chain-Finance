@@ -41,20 +41,18 @@ contract AR {
         receiptsSize = 0;
     }
 
-    function newCompany(address com, string name, uint balance, uint rate) public onlyOwner returns (bool success){
+    function newCompany(address com, string name, uint balance, uint rate) public onlyOwner{
         require(companies[com].isValid == false,"existed company");
         companies[com] = Company(name, balance, rate, 0, 0, false, true);
-        return true;
     }
 
-    function newBank(address bank, string name, uint balance, uint rate) public onlyOwner returns (bool success){
+    function newBank(address bank, string name, uint balance, uint rate) public onlyOwner{
         require(companies[bank].isValid == false,"existed company");
         companies[bank] = Company(name, balance, rate, 0, 0, true, true);
-        return true;
     }
 
     // send `to` a reciept after a deal
-    function deal(address to, uint amount) public returns (bool success, uint id) {
+    function deal(address to, uint amount) public returns (uint id) {
         require(companies[to].isValid,"invalid company");
         address from = msg.sender;
         require(companies[from].isValid,"invalid company");
@@ -64,12 +62,11 @@ contract AR {
         receiptsSize += 1;
         id = receiptsSize;
         receipts[id] = Receipt(from, to, amount, true);
-        success = true;
     }
 
     // transfer account receivable from `from` to `to` with the `receiptId`
-    function transfer(address to, uint receiptId, uint amount) public returns (bool success, uint id) {
-        require(receiptId < receiptsSize,"invalid receipt");
+    function transfer(address to, uint receiptId, uint amount) public returns (uint id) {
+        require(receiptId <= receiptsSize,"invalid receipt");
         require(companies[to].isValid,"invalid company");
         address from = msg.sender;
         require(companies[from].isValid,"invalid company");
@@ -84,12 +81,11 @@ contract AR {
         receiptsSize += 1;
         id = receiptsSize;
         receipts[id] = Receipt(upper, to, amount, true);
-        success = true;
     }
 
     // finace from bank
-    function financing(address bank, uint receiptId, uint amount)public returns(bool success, uint id) {
-        require(receiptId < receiptsSize,"");
+    function financing(address bank, uint receiptId, uint amount)public returns(uint id) {
+        require(receiptId <= receiptsSize,"invalid receipt");
         address to = msg.sender;
         require(companies[to].isValid,"invalid company");
         require(companies[bank].isBank,"is not bank");
@@ -106,23 +102,20 @@ contract AR {
         id = receiptsSize;
         // a new receipt to bank
         receipts[id] = Receipt(from, bank, amount, true);
-        success = true;
     }
 
     // pay a receipt
-    function pay(uint receiptId)public returns (bool success){
-        require(receiptId < receiptsSize,"invalid receipt");
+    function pay(uint receiptId)public{
+        require(receiptId <= receiptsSize,"invalid receipt");
         address from = msg.sender;
         address to = receipts[receiptId].to;
         require(from == receipts[receiptId].from,"");
-        if(companies[from].balance < receipts[receiptId].amount)
-            return false;
+        require(companies[from].balance >= receipts[receiptId].amount,"");
         companies[from].balance -= receipts[receiptId].amount;
         companies[to].balance += receipts[receiptId].amount;
         receipts[receiptId].amount = 0;
         companies[from].toPay -= receipts[receiptId].amount;
         companies[to].toReceive -= receipts[receiptId].amount;
-        return true;
     }
 
 }
