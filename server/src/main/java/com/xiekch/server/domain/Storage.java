@@ -7,12 +7,16 @@ public class Storage {
     private ArrayList<User> users;
     private ArrayList<Company> companies;
     private static Storage storage;
+    private String contractAddress;
+    private String owner;
     private final static String UsersFileName = "./data/Users.txt";
     private final static String CompaniesFileName = "./data/Companies.txt";
+    private final static String ContractAddressFileName = "./data/address.txt";
     private static int dirty = 0;
 
     private Storage() {
         this.users = new ArrayList<User>();
+        this.companies = new ArrayList<Company>();
         readFromFile();
     }
 
@@ -54,13 +58,26 @@ public class Storage {
                 reader.close();
             }
 
-        } catch (Exception e) {
+            // address
+            inputFile = new File(ContractAddressFileName);
+            if (!(inputFile.isFile() && inputFile.exists())) {
+                inputFile.createNewFile();
+            } else {
+                reader = new BufferedReader(new FileReader(inputFile));
+                inline = reader.readLine();
+                this.contractAddress = inline;
+                reader.close();
+            }
+
+        } catch (
+
+        Exception e) {
             e.printStackTrace();
         }
     }
 
     private void writeToFile() {
-        if (dirty < 10)
+        if (dirty < 1)
             return;
         dirty = 0;
         File outputFile = null;
@@ -172,7 +189,6 @@ public class Storage {
     }
 
     // company
-
     public void createCompany(Company company) {
         this.companies.add(company);
         dirty++;
@@ -197,8 +213,12 @@ public class Storage {
         return null;
     }
 
+    public ArrayList<Company> getCompanies() {
+        return this.companies;
+    }
+
     public boolean isCompany(String companyName) {
-        for (Company com: this.companies) {
+        for (Company com : this.companies) {
             if (com.getName().equals(companyName)) {
                 return true;
             }
@@ -206,8 +226,38 @@ public class Storage {
         return false;
     }
 
+    // contract
+    public boolean hasDeployed() {
+        return this.companies.size() != 0;
+    }
 
+    public String getOwner() {
+        if (this.users.size() == 0) {
+            return null;
+        } else {
+            return this.users.get(0).getName();
+        }
+    }
 
+    public void saveContractAddress(String contractAddress) {
+        try {
+            File outputFile = new File(ContractAddressFileName);
+            if (!outputFile.exists()) {
+                outputFile.createNewFile();
+            }
+            BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
+            writer.write(contractAddress);
+            writer.newLine();
+            writer.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getContractAddress() {
+        return this.contractAddress;
+    }
 
     public void sync() {
         this.writeToFile();

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Result/title>
+        <meta name="author" content="xiekch">
+        <link rel="stylesheet" href="/css/main.css">
+        <script src="/js/jquery-3.3.1.js"></script>
+</head>
+
+<body>
+    <header>
+        <a href="/main"><button id="back">Back to the index</button></a>
+        <form id="logOutForm" action="/logOut" method="POST">
+            <input id="logOut" class="button" type="submit" value="Log Out" />
+        </form>
+    </header>
+
+    <div id="main">
+        <h1>Supply Chain Finance</h1>
+        <div>
+            <p>
+                <output th:text="${result`}"></output>
+            </p>
+        </div>
+</body>
+
+</html>

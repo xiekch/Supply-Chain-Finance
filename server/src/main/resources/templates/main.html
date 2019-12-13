@@ -17,24 +17,118 @@
   </header>
 
   <div id="main">
-    <h1>Wo</h1>
-    <h2>Create a company</h2>
-    <form id="form" action="/createCompany" method="post">
-      <div class="cell">
-        <span class="fieldName">Company name</span>
-        <input class="field" type="text" id="companyName" name="companyName" />
-        <div class="error"></div>
-      </div>
+    <h1>Supply Chain Finance</h1>
 
-      <div>
-        <input id="reset" class="button" type="button" value="reset" />
-        <input id="submit" class="button" type="submit" value="submit" />
-      </div>
-    </form>
-    <div id="owned-list">
+    <div id="companies">
       <div id="owned">
         <h3>已有企业</h3>
+        <div class="owned" th:each="ownedCompany: ${ownedCompanies}" th:id="${ownedCompany.name}">
+          <output th:text="${ownedCompany.name}"></output>
+        </div>
       </div>
+
+      <div id="rest">
+        <h3>其他企业</h3>
+        <div class="rest" th:each="restCompany: ${restCompanies}" th:id="${restCompany.name}">
+          <output th:text="${restCompany.name}"></output>
+        </div>
+      </div>
+
+    </div>
+    <div>
+      <h2>调用合约</h2>
+      <h3>创建</h3>
+      <form action="/contract/new" method="post">
+        <div class="cell">
+          <span class="fieldName">公司名</span>
+          <input class="field" type="text" id="companyName" name="name" />
+          <div class="error"></div>
+        </div>
+        <div class="cell">
+          <span class="fieldName">类型</span>
+          <label><input type="radio" name="isBank" value="1" />银行</label>
+          <label><input type="radio" name="isBank" value="0" />企业</label>
+        </div>
+        <div class="cell">
+          <span class="fieldName">注资</span>
+          <input class="field" type="number" id="companyName" name="balance" value=100 />
+        </div>
+        <div class="cell">
+          <span class="fieldName">信用等级</span>
+          <input class="field" type="number" id="companyrate" name="rate" value=5 />
+        </div>
+        <div>
+          <button type="reset" value="reset">reset</button>
+          <input id="submit" class="button" type="submit" value="submit" />
+        </div>
+      </form>
+
+      <h3>交易</h3>
+      <form action="/contract/deal" method="post">
+        <div class="cell">
+          <span class="fieldName">发送方公司名</span>
+          <input class="field" type="text" name="from" />
+        </div>
+        <div class="cell">
+          <span class="fieldName">接收方公司名</span>
+          <input class="field" type="text" name="to"" />
+        </div>
+        <div class=" cell">
+          <span class="fieldName">金额</span>
+          <input class="field" type="number" name="amount" value=500 />
+        </div>
+        <div>
+          <button type="reset" value="reset">reset</button>
+          <input id="submit" class="button" type="submit" value="submit" />
+        </div>
+      </form>
+
+      <h3>转让</h3>
+      <form action="/contract/transfer" method="post">
+        <div class="cell">
+          <span class="fieldName">发送方公司名</span>
+          <input class="field" type="text" name="from" />
+        </div>
+        <div class="cell">
+          <span class="fieldName">接收方公司名</span>
+          <input class="field" type="text" name="to"" />
+        </div>
+        <div class=" cell">
+          <span class="fieldName">应收账款id</span>
+          <input class="field" type="number" name="id"" value=1 />
+        </div>
+        <div class=" cell">
+          <span class="fieldName">金额</span>
+          <input class="field" type="number" name="amount" value=500 />
+        </div>
+        <div>
+          <button type="reset" value="reset">reset</button>
+          <input id="submit" class="button" type="submit" value="submit" />
+        </div>
+      </form>
+
+      <h3>融资</h3>
+      <form action="/contract/finance" method="post">
+        <div class="cell">
+          <span class="fieldName">公司名</span>
+          <input class="field" type="text" id="companyName" name="name" />
+          <div class="error"></div>
+        </div>
+        <div class=" cell">
+          <span class="fieldName">应收账款id</span>
+          <input class="field" type="number" name="id"" value=1 />
+        </div>
+        <div class=" cell">
+          <span class="fieldName">金额</span>
+          <input class="field" type="number" name="amount" value=500 />
+        </div>
+
+        <div>
+          <button type="reset" value="reset">reset</button>
+          <input id="submit" class="button" type="submit" value="submit" />
+        </div>
+      </form>
+
     </div>
   </div>
   <footer></footer>

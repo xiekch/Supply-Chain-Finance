@@ -16,7 +16,7 @@ html, body{
 
 #introduction h1, h2{
     color: white;
-    text-shadow: 5px 5px 15px #2B3137;
+    text-shadow: 10px 10px 15px #2B3137;
     font-family: Georgia, 'Times New Roman', Times, serif;
 }
 

@@ -46,4 +46,8 @@ public class Company {
     public String getOwner(){
         return this.owner;
     }
+
+    public boolean isOwner(String username){
+        return this.owner.equals(username);
+    }
 }

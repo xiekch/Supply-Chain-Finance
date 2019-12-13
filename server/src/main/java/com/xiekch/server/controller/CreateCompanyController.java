@@ -16,6 +16,6 @@ public class CreateCompanyController {
     public String createCompany(@RequestParam("companyName") String companyName, HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");    
         
-        return "redirect:/";
+        return "main";
     }
 }

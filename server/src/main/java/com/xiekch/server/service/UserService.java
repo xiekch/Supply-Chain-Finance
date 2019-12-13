@@ -1,5 +1,7 @@
 package com.xiekch.server.service;
 
+import java.util.ArrayList;
+
 import com.xiekch.server.domain.*;
 
 public class UserService {
@@ -40,6 +42,11 @@ public class UserService {
             throw new RuntimeException("User's name has been used!");
         }
 
+        // deploy the contract
+        if (this.storage.getUsers().size() == 0) {
+            ContractsService.getInstance().deployContract(user.getName());
+        }
+
         this.storage.createUser(user);
         return true;
     }
@@ -58,15 +65,45 @@ public class UserService {
         return this.storage.isUser(user);
     }
 
-    public boolean hasCompany(User user){
+    public boolean hasCompany(User user) {
         if (user == null || user.getName() == null || user.getPassword() == null)
             return false;
         return this.storage.hasCompany(user);
     }
 
-    public Company getCompany(User user){
+    public Company getCompany(User user) {
         if (user == null || user.getName() == null || user.getPassword() == null)
             return null;
         return this.storage.getCompany(user);
+    }
+
+    public ArrayList<Company> getOwnedCompanies(User user){
+        if (!this.isUser(user)) {
+            throw new RuntimeException("User does'nt exit!");
+        }
+
+        ArrayList<Company> ownedCompanies = new ArrayList<Company>();
+        ArrayList<Company> Companies = this.storage.getCompanies();
+        for (Company com : Companies) {
+            if (com.isOwner(user.getName())) {
+                ownedCompanies.add(com);
+            }
+        }
+        return ownedCompanies;
+    }
+
+    public ArrayList<Company> getRestCompanies(User user){
+        if (!this.isUser(user)) {
+            throw new RuntimeException("User does'nt exit!");
+        }
+
+        ArrayList<Company> restCompanies = new ArrayList<Company>();
+        ArrayList<Company> Companies = this.storage.getCompanies();
+        for (Company com : Companies) {
+            if (!com.isOwner(user.getName())) {
+                restCompanies.add(com);
+            }
+        }
+        return restCompanies;
     }
 }

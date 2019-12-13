@@ -14,7 +14,8 @@ public class MainController {
     @GetMapping("/main")
     public String mainPage(HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
-        // Company company = UserService.getInstance().getCompany(user);
+        model.addAttribute("ownedCompanies", UserService.getInstance().getOwnedCompanies(user));
+        model.addAttribute("restCompanies", UserService.getInstance().getRestCompanies(user));
         
         model.addAttribute("user", user);
         return "main";

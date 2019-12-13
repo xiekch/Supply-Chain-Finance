@@ -93,11 +93,11 @@ header{
     font-size: 1em;
 }
 
-#participated, #rest{
+#owned, #rest{
     margin-bottom: 20px;
 }
 
-.participated, .rest{
+.owned, .rest{
     display: flex;
     justify-content: space-between;
     border: solid;
@@ -109,7 +109,7 @@ output {
     margin-left: 5px;
 }
 
-.participated > div {
+.owned > div {
     cursor: default;
 }
 
@@ -121,7 +121,7 @@ output {
     height: 30px;
 }
 
-.participated form {
+.owned form {
     display: inline;
 }
 
