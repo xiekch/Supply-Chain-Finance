@@ -1,0 +1,144 @@
+/* layout */
+html, body{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 22px;
+    text-align: center;
+    background-color: whitesmoke;
+    width: 100%;
+    margin: 0;
+    /* background-color: #CCE8CF; */
+}
+
+#main{
+    width: 500px;
+    margin: auto;
+    margin-bottom: 100px;
+}
+
+h1{
+    font-size: 2em;
+    margin: 0.5em;
+}
+
+h2{
+    font-size: 1.5em;
+}
+
+/* form */
+#form{
+    width: 100%;
+}
+
+#form .cell{
+    width: 100%;
+}
+
+#form .fieldName{
+    display: inline-block;
+    width: 25%;
+}
+
+#form .field{
+    width: 70%;
+    height: 2em;
+}
+
+#form .error{
+    width: 70%;
+    margin-left: 28%;
+    font-size: 16px;
+    height: 1em;
+    color: #E56260;
+    margin-bottom: 1.5em;
+    text-align: left;
+}
+
+#form .button{
+    width: 24%;
+    height: 2em;
+    margin: 2px;
+}
+
+input, button{
+    font-size: 1em;
+}
+
+header{
+    width: 100%;
+    height: 2em;
+    background-color: coral;
+}
+
+#reset{
+    background-color: coral;
+    border: none;
+}
+
+#submit{
+    background-color: #2E7BEB;
+    border: none;
+}
+
+#logOut {
+    width: 100px;
+    background-color: rgb(253, 169, 138);
+    border: none;
+    height: 2em;
+    float: right;
+    margin-right: 80px;
+}
+
+.button {
+    cursor: pointer;
+    font-size: 1em;
+}
+
+#participated, #rest{
+    margin-bottom: 20px;
+}
+
+.participated, .rest{
+    display: flex;
+    justify-content: space-between;
+    border: solid;
+    padding: 3px;
+    margin-top: 8px;
+}
+
+output {
+    margin-left: 5px;
+}
+
+.participated > div {
+    cursor: default;
+}
+
+.enterButton {
+    cursor: pointer;
+    border: none;
+    background-color: #2E7BEB;
+    width: 70px;
+    height: 30px;
+}
+
+.participated form {
+    display: inline;
+}
+
+.quitButton {
+    cursor: pointer;
+    border: none;
+    background-color: coral;
+    width: 50px;
+    height: 30px;
+    margin-left: 10px;
+}
+
+.joinButton {
+    cursor: pointer;
+    border: none;
+    background-color: coral;
+    width: 50px;
+    height: 30px;
+    margin-left: 10px;
+}

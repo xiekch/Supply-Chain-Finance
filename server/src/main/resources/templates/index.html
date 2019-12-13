@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Supply Chain Finance</title>
+    <meta name="author" content="xiekch">
+    <link rel="stylesheet" href="/css/main.css">
+    <script src="/js/jquery-3.3.1.js"></script>
+    <script src="/js/userSignUpIn.js"></script>
+</head>
+
+<body>
+    <div id="main">
+        <div id="introduction">
+            <h1>Supply Chain Finance</h1>
+            <h2>on the blockchain</h2>
+        </div>
+        <div id="form-container">
+            <h1>Sign Up/Sign In</h1>
+            <form id="form" action="/" method="post">
+                <div class="cell">
+                    <span class="fieldName">User name</span>
+                    <input class="field" type="text" id="username" name="name">
+                    <div class="error"></div>
+                </div>
+
+                <div class="cell">
+                    <span class="fieldName">Password</span>
+                    <input class="field" type="password" id="password" name="password">
+                    <div class="error" th:text="${error}"></div>
+                </div>
+
+                <div>
+                    <input id="reset" class="button" type="button" value="reset" />
+                    <input id="submit" class="button" type="submit" value="Sign Up/Sign In" />
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,116 @@
+/* layout */
+html, body{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 24px;
+    text-align: center;
+    background: whitesmoke url("/images/background.jpg") no-repeat fixed center;
+    background-size: cover;
+    /* background-color: #CCE8CF; */
+}
+
+#main{
+    width: 700px;
+    margin: auto;
+    margin-top: 80px;
+}
+
+#introduction h1, h2{
+    color: white;
+    text-shadow: 5px 5px 15px #2B3137;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+#introduction h1{
+    font-size: 2em;
+}
+
+#introduction h2{
+    font-size: 1.5em;
+    float: right;
+}
+
+#form-container h1{
+    font-size: 1.5em;
+    margin: 1em;
+}
+
+#form-container{
+    /* background-color: whitesmoke;
+    opacity: 0.8; */
+    background-color: rgba(245, 245, 245, 0.8);
+    clear: both;
+    /* height: 300px; */
+}
+
+/* form */
+#form{
+    width: 100%;
+}
+
+#form .cell{
+    width: 100%;
+}
+
+#form .fieldName{
+    display: inline-block;
+    width: 25%;
+}
+
+#form .field{
+    width: 70%;
+    height: 1.5em;
+    font-size: 1em;
+}
+
+.error{
+    width: 70%;
+    margin-left: 28%;
+    font-size: 16px;
+    height: 1.5em;
+    color: #E56260;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    text-align: left;
+}
+
+#form .button{
+    width: 30%;
+    height: 2em;
+    margin: 2px;
+    font-size: 1em;
+}
+
+input, button{
+    font-size: 1em;
+}
+
+#reset{
+    background-color: coral;
+    border: none;
+}
+
+#submit{
+    background-color: #2E7BEB;
+    border: none;
+}
+
+#autoFill{
+    border: 1px solid black;
+}
+
+/* table */
+#table{
+    width: 80%;
+    margin: auto;
+    margin-bottom: 1em;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+#table td{
+    border: 1px solid black;
+}
+
+.button {
+    cursor: pointer;
+}

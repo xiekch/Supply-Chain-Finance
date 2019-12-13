@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Main Page</title>
+  <meta name="author" content="xiekch" />
+  <link rel="stylesheet" href="/css/mainPage.css" />
+  <script src="/js/jquery-3.3.1.js"></script>
+</head>
+
+<body>
+  <header>
+    <form action="/logOut" method="POST">
+      <input id="logOut" class="button" type="submit" value="Log Out" />
+    </form>
+  </header>
+
+  <div id="main">
+    <h1>Wo</h1>
+    <h2>Create a company</h2>
+    <form id="form" action="/createCompany" method="post">
+      <div class="cell">
+        <span class="fieldName">Company name</span>
+        <input class="field" type="text" id="companyName" name="companyName" />
+        <div class="error"></div>
+      </div>
+
+      <div>
+        <input id="reset" class="button" type="button" value="reset" />
+        <input id="submit" class="button" type="submit" value="submit" />
+      </div>
+    </form>
+    <div id="owned-list">
+      <div id="owned">
+        <h3>已有企业</h3>
+      </div>
+    </div>
+  </div>
+  <footer></footer>
+</body>
+
+</html>
