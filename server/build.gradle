@@ -9,6 +9,7 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 
 repositories {
+	maven { url "https://dl.bintray.com/ethereum/maven/" }
 	mavenCentral()
 }
 
@@ -19,6 +20,9 @@ dependencies {
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
+
+	compile 'org.fisco-bcos:web3sdk:2.1.0'
+
 }
 
 test {
