@@ -2,23 +2,17 @@ encrypt-type: # 0：普通， 1：国密
  encrypt-type: 0 
  
 group-channel-connections-config:
+  caCert: classpath:ca.crt
+  sslCert: classpath:sdk.crt
+  sslKey: classpath:sdk.key
   all-channel-connections:
   - group-id: 1  # 群组ID
     connections-str:
-                    - 127.0.0.1:30300  # 节点，listen_ip:channel_listen_port
-                    - 127.0.0.1:30301
-                    - 127.0.0.1:30302
-                    - 127.0.0.1:30303
-#   - group-id: 2  
-#     connections-str:
-#                     - 127.0.0.1:20202  # 节点，listen_ip:channel_listen_port
-#                     - 127.0.0.1:20203
- 
+                    - 127.0.0.1:20200  # 节点，listen_ip:channel_listen_port
+                    - 127.0.0.1:20201
+                    - 127.0.0.1:20202
+                    - 127.0.0.1:20203
+
 channel-service:
   group-id: 1 # sdk实际连接的群组
-  agency-name: fisco # 机构名称
-
-accounts:
-  pem-file: 0xcdcce60801c0a2e6bb534322c32ae528b9dec8d2.pem # PEM 格式账户文件
-  p12-file: 0x98333491efac02f8ce109b0c499074d47e7779a6.p12 # PKCS12 格式账户文件
-  password: 123456 # PKCS12 格式账户密码
+  agency-name: agency # 机构名称

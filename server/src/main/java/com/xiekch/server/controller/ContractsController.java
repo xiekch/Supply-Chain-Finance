@@ -2,6 +2,7 @@ package com.xiekch.server.controller;
 
 import javax.servlet.http.HttpSession;
 
+import org.fisco.bcos.web3j.protocol.Web3j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -10,34 +11,60 @@ import com.xiekch.server.service.ContractsService;
 
 @Controller
 public class ContractsController {
+    private Web3j web3j;
+
+    public ContractsController(Web3j web3j) {
+        this.web3j = web3j;
+    }
+
     @PostMapping("/contract/new")
-    public String newCompany(HttpSession session, Model model) {
+    public String newCompany(@RequestParam("name") String companyName, @RequestParam("balance") int balance,
+            @RequestParam("rate") int rate, HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
-        String message = "OK";
+        String owner = user.getName();
+        String message = "OK, you created a company";
+        if (!ContractsService.getInstance(web3j).createCompany(companyName, owner, balance, rate)) {
+            message = "Error";
+        }
+
         model.addAttribute("message", message);
         return "result";
     }
 
     @PostMapping("/contract/deal")
-    public String deal(HttpSession session, Model model) {
+    public String deal(@RequestParam("from") String companyName, @RequestParam("to") String toCompanyName,
+            @RequestParam("amount") int amount, HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
-        String message = "OK";
+        String message = "OK, you made a deal";
+        if (!ContractsService.getInstance(web3j).deal(companyName, toCompanyName, amount)) {
+            message = "Error";
+        }
+
         model.addAttribute("message", message);
         return "result";
     }
 
     @PostMapping("/contract/transfer")
-    public String transfer(HttpSession session, Model model) {
+    public String transfer(@RequestParam("from") String companyName, @RequestParam("to") String toCompanyName,
+            @RequestParam("id") int receiptId, @RequestParam("amount") int amount, HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
-        String message = "OK";
+        String message = "OK, you transfer a deal";
+        if (!ContractsService.getInstance(web3j).transfer(companyName, toCompanyName, receiptId, amount)) {
+            message = "Error";
+        }
         model.addAttribute("message", message);
         return "result";
     }
 
     @PostMapping("/contract/finance")
-    public String finance(HttpSession session, Model model) {
+    public String finance(@RequestParam("name") String companyName, @RequestParam("id") int receiptId,
+            @RequestParam("amount") int amount, HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
-        String message = "OK";
+        String message = "OK, you financed";
+        if (!ContractsService.getInstance(web3j).financing(companyName, receiptId, amount)) {
+            message = "Error";
+        }
+
         model.addAttribute("message", message);
         return "result";
     }

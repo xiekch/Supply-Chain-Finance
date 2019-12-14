@@ -42,11 +42,6 @@ public class UserService {
             throw new RuntimeException("User's name has been used!");
         }
 
-        // deploy the contract
-        if (this.storage.getUsers().size() == 0) {
-            ContractsService.getInstance().deployContract(user.getName());
-        }
-
         this.storage.createUser(user);
         return true;
     }

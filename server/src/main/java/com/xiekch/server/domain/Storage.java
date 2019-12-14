@@ -7,11 +7,11 @@ public class Storage {
     private ArrayList<User> users;
     private ArrayList<Company> companies;
     private static Storage storage;
-    private String contractAddress;
-    private String owner;
+    private String contractAddress = null;
+    private String ownerPrivateKey = null;
     private final static String UsersFileName = "./data/Users.txt";
     private final static String CompaniesFileName = "./data/Companies.txt";
-    private final static String ContractAddressFileName = "./data/address.txt";
+    private final static String ContractInformFileName = "./data/Contract.txt";
     private static int dirty = 0;
 
     private Storage() {
@@ -59,13 +59,19 @@ public class Storage {
             }
 
             // address
-            inputFile = new File(ContractAddressFileName);
+            inputFile = new File(ContractInformFileName);
             if (!(inputFile.isFile() && inputFile.exists())) {
                 inputFile.createNewFile();
             } else {
                 reader = new BufferedReader(new FileReader(inputFile));
                 inline = reader.readLine();
-                this.contractAddress = inline;
+                if (inline != null && !inline.isEmpty()) {
+                    this.contractAddress = inline;
+                    inline = reader.readLine();
+                    if (inline != null && !inline.isEmpty()) {
+                        this.ownerPrivateKey = inline;
+                    }
+                }
                 reader.close();
             }
 
@@ -213,6 +219,15 @@ public class Storage {
         return null;
     }
 
+    public Company getCompanyByName(String name) {
+        for (Company company : this.companies) {
+            if (company.getName().equals(name)) {
+                return company;
+            }
+        }
+        return null;
+    }
+
     public ArrayList<Company> getCompanies() {
         return this.companies;
     }
@@ -239,14 +254,16 @@ public class Storage {
         }
     }
 
-    public void saveContractAddress(String contractAddress) {
+    public void saveContractInform(String contractAddress, String privateKey) {
         try {
-            File outputFile = new File(ContractAddressFileName);
+            File outputFile = new File(ContractInformFileName);
             if (!outputFile.exists()) {
                 outputFile.createNewFile();
             }
             BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
             writer.write(contractAddress);
+            writer.newLine();
+            writer.write(privateKey);
             writer.newLine();
             writer.close();
 
@@ -257,6 +274,10 @@ public class Storage {
 
     public String getContractAddress() {
         return this.contractAddress;
+    }
+
+    public String getPrivateKey() {
+        return this.ownerPrivateKey;
     }
 
     public void sync() {

@@ -20,6 +20,7 @@
     <h1>Supply Chain Finance</h1>
 
     <div id="companies">
+
       <div id="owned">
         <h3>已有企业</h3>
         <div class="owned" th:each="ownedCompany: ${ownedCompanies}" th:id="${ownedCompany.name}">
@@ -33,8 +34,8 @@
           <output th:text="${restCompany.name}"></output>
         </div>
       </div>
-
     </div>
+    
     <div>
       <h2>调用合约</h2>
       <h3>创建</h3>
@@ -42,7 +43,6 @@
         <div class="cell">
           <span class="fieldName">公司名</span>
           <input class="field" type="text" id="companyName" name="name" />
-          <div class="error"></div>
         </div>
         <div class="cell">
           <span class="fieldName">类型</span>
@@ -59,7 +59,7 @@
         </div>
         <div>
           <button type="reset" value="reset">reset</button>
-          <input id="submit" class="button" type="submit" value="submit" />
+          <button class="button" type="submit" value="submit">submit</button>
         </div>
       </form>
 
@@ -71,15 +71,15 @@
         </div>
         <div class="cell">
           <span class="fieldName">接收方公司名</span>
-          <input class="field" type="text" name="to"" />
+          <input class="field" type="text" name="to" />
         </div>
-        <div class=" cell">
+        <div class="cell">
           <span class="fieldName">金额</span>
           <input class="field" type="number" name="amount" value=500 />
         </div>
         <div>
           <button type="reset" value="reset">reset</button>
-          <input id="submit" class="button" type="submit" value="submit" />
+          <button class="button" type="submit" value="submit">submit</button>
         </div>
       </form>
 
@@ -91,11 +91,11 @@
         </div>
         <div class="cell">
           <span class="fieldName">接收方公司名</span>
-          <input class="field" type="text" name="to"" />
+          <input class="field" type="text" name="to" />
         </div>
         <div class=" cell">
           <span class="fieldName">应收账款id</span>
-          <input class="field" type="number" name="id"" value=1 />
+          <input class="field" type="number" name="id" value=1 />
         </div>
         <div class=" cell">
           <span class="fieldName">金额</span>
@@ -103,7 +103,7 @@
         </div>
         <div>
           <button type="reset" value="reset">reset</button>
-          <input id="submit" class="button" type="submit" value="submit" />
+          <button class="button" type="submit" value="submit">submit</button>
         </div>
       </form>
 
@@ -112,11 +112,10 @@
         <div class="cell">
           <span class="fieldName">公司名</span>
           <input class="field" type="text" id="companyName" name="name" />
-          <div class="error"></div>
         </div>
         <div class=" cell">
           <span class="fieldName">应收账款id</span>
-          <input class="field" type="number" name="id"" value=1 />
+          <input class="field" type="number" name="id" value=1 />
         </div>
         <div class=" cell">
           <span class="fieldName">金额</span>
@@ -125,7 +124,7 @@
 
         <div>
           <button type="reset" value="reset">reset</button>
-          <input id="submit" class="button" type="submit" value="submit" />
+          <button class="button" type="submit" value="submit">submit</button>
         </div>
       </form>
 
