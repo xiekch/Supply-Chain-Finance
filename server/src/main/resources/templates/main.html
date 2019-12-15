@@ -22,7 +22,7 @@
     <div id="companies">
 
       <div id="owned">
-        <h3>已有企业</h3>
+        <h3>拥有企业</h3>
         <div class="owned" th:each="ownedCompany: ${ownedCompanies}" th:id="${ownedCompany.name}">
           <output th:text="${ownedCompany.name}"></output>
         </div>
@@ -120,6 +120,23 @@
         <div class=" cell">
           <span class="fieldName">金额</span>
           <input class="field" type="number" name="amount" value=500 />
+        </div>
+
+        <div>
+          <button type="reset" value="reset">reset</button>
+          <button class="button" type="submit" value="submit">submit</button>
+        </div>
+      </form>
+
+      <h3>支付</h3>
+      <form action="/contract/pay" method="post">
+        <div class="cell">
+          <span class="fieldName">公司名</span>
+          <input class="field" type="text" id="companyName" name="name" />
+        </div>
+        <div class=" cell">
+          <span class="fieldName">应收账款id</span>
+          <input class="field" type="number" name="id" value=1 />
         </div>
 
         <div>

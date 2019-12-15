@@ -22,7 +22,7 @@ public class ContractsController {
             @RequestParam("rate") int rate, HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
         String owner = user.getName();
-        String message = "OK, you created a company";
+        String message = "OK, you created a company. \n";
         if (!ContractsService.getInstance(web3j).createCompany(companyName, owner, balance, rate)) {
             message = "Error";
         }
@@ -34,10 +34,12 @@ public class ContractsController {
     @PostMapping("/contract/deal")
     public String deal(@RequestParam("from") String companyName, @RequestParam("to") String toCompanyName,
             @RequestParam("amount") int amount, HttpSession session, Model model) {
-        User user = (User) session.getAttribute("user");
-        String message = "OK, you made a deal";
-        if (!ContractsService.getInstance(web3j).deal(companyName, toCompanyName, amount)) {
+        String message = "OK, you made a deal. \n";
+        int newReceiptId = ContractsService.getInstance(web3j).deal(companyName, toCompanyName, amount);
+        if (newReceiptId == 0) {
             message = "Error";
+        } else {
+            message += "newReceiptId: " + newReceiptId;
         }
 
         model.addAttribute("message", message);
@@ -47,11 +49,14 @@ public class ContractsController {
     @PostMapping("/contract/transfer")
     public String transfer(@RequestParam("from") String companyName, @RequestParam("to") String toCompanyName,
             @RequestParam("id") int receiptId, @RequestParam("amount") int amount, HttpSession session, Model model) {
-        User user = (User) session.getAttribute("user");
-        String message = "OK, you transfer a deal";
-        if (!ContractsService.getInstance(web3j).transfer(companyName, toCompanyName, receiptId, amount)) {
+        String message = "OK, you transfer a deal. \n";
+        int newReceiptId = ContractsService.getInstance(web3j).transfer(companyName, toCompanyName, receiptId, amount);
+        if (newReceiptId == 0) {
             message = "Error";
+        } else {
+            message += "newReceiptId: " + newReceiptId;
         }
+
         model.addAttribute("message", message);
         return "result";
     }
@@ -59,13 +64,31 @@ public class ContractsController {
     @PostMapping("/contract/finance")
     public String finance(@RequestParam("name") String companyName, @RequestParam("id") int receiptId,
             @RequestParam("amount") int amount, HttpSession session, Model model) {
-        User user = (User) session.getAttribute("user");
-        String message = "OK, you financed";
-        if (!ContractsService.getInstance(web3j).financing(companyName, receiptId, amount)) {
-            message = "Error";
-        }
+        String message = "OK, you financed. \n";
+        int newReceiptId = ContractsService.getInstance(web3j).financing(companyName, receiptId, amount);
 
+        if (newReceiptId == 0) {
+            message = "Error";
+        } else {
+            message += "newReceiptId: " + newReceiptId;
+        }
         model.addAttribute("message", message);
         return "result";
     }
+
+    @PostMapping("/contract/pay")
+    public String pay(@RequestParam("name") String companyName, @RequestParam("id") int receiptId, HttpSession session,
+            Model model) {
+        String message = "OK, you payed. \n";
+        int newReceiptId = ContractsService.getInstance(web3j).pay(companyName, receiptId);
+
+        if (newReceiptId == 0) {
+            message = "Error";
+        } else {
+            // message += "newReceiptId: " + newReceiptId;
+        }
+        model.addAttribute("message", message);
+        return "result";
+    }
+
 }

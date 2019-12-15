@@ -42,7 +42,7 @@ cd Supply-Chain-Finance
 
 ```
 cd server
-./nodes/127.0.0.1/start_all.sh 
+./gradlew build
 java -jar ./build/libs/server-0.0.1-SNAPSHOT.jar
 ```
 

@@ -19,8 +19,6 @@ contract AR {
         uint toPay;
         uint toReceive;
         bool isBank;
-        // receipts received
-        // mapping(uint => Receipt)receipts;
         bool isValid;
     }
 
@@ -45,129 +43,154 @@ contract AR {
     }
 
     function newCompany(address com, string memory name, uint balance, uint rate) public{
+        int ret = 1;
         if(companies[com].isValid == true){
-            emit resultEvent(0,0);
+            ret = 0;
         }
-        companies[com] = Company(name, balance, rate, 0, 0, false, true);
-        emit resultEvent(1,0);
+
+        if (ret == 1){
+            companies[com] = Company(name, balance, rate, 0, 0, false, true);
+            emit resultEvent(1,0);
+        }
+        else
+            emit resultEvent(0,0);
     }
 
     function newBank(address bank, string memory name, uint balance, uint rate) public{
+        int ret = 1;
         if(companies[bank].isValid == true){
-            emit resultEvent(0,0);
+            ret = 0;
         }
-        companies[bank] = Company(name, balance, rate, 0, 0, true, true);
-        emit resultEvent(1,0);
+
+        if (ret == 1){
+            emit resultEvent(1,0);
+            companies[bank] = Company(name, balance, rate, 0, 0, true, true);
+        }
+        else
+            emit resultEvent(0,0);
     }
 
     // send `to` a reciept after a deal
     function deal(address from, address to, uint amount) public returns (uint id) {
+        int ret = 1;
         if(companies[to].isValid == false){
-            emit resultEvent(0,0);
+            ret = 0;
+        }
+        if(companies[from].isValid == false){
+            ret = 0;
         }
 
-        if(companies[from].isValid == false){
+        if (ret == 1){
+            companies[from].toPay += amount;
+            companies[to].toReceive += amount;
+            receiptsSize += 1;
+            id = receiptsSize;
+            receipts[id] = Receipt(from, to, amount, true);
+            emit resultEvent(1,id);
+        }else
             emit resultEvent(0,0);
-        }
-        companies[from].toPay += amount;
-        companies[to].toReceive += amount;
-        receiptsSize += 1;
-        id = receiptsSize;
-        receipts[id] = Receipt(from, to, amount, true);
-        emit resultEvent(1,id);
     }
 
     // transfer account receivable from `from` to `to` with the `receiptId`
     function transfer(address from, address to, uint receiptId, uint amount) public returns (uint id) {
+        int ret = 1;
         if(companies[to].isValid == false){
-            emit resultEvent(0,0);
+            ret = 0;
         }
-
         if(companies[from].isValid == false){
-            emit resultEvent(0,0);
+            ret = 0;
         }
-
         if(receiptId > receiptsSize){
-            emit resultEvent(0,0);
+            ret = 0;
         }
-
         if(receipts[receiptId].to != from){
-            emit resultEvent(0,0);
+            ret = 0;
         }
-
         if(receipts[receiptId].amount < amount){
-            emit resultEvent(0,0);
+            ret = 0;
         }
-        address upper = receipts[receiptId].from;
-        receipts[receiptId].amount -= amount;
 
-        companies[from].toReceive -= amount;
-        companies[to].toReceive += amount;
-        receiptsSize += 1;
-        id = receiptsSize;
-        receipts[id] = Receipt(upper, to, amount, true);
-        emit resultEvent(1,id);
+        if(ret == 1){
+            address upper = receipts[receiptId].from;
+            receipts[receiptId].amount -= amount;
+
+            companies[from].toReceive -= amount;
+            companies[to].toReceive += amount;
+            receiptsSize += 1;
+            id = receiptsSize;
+            receipts[id] = Receipt(upper, to, amount, true);
+            emit resultEvent(1,id);
+        }else
+            emit resultEvent(0,0);
     }
 
     // finace from bank
     function financing(address to, address bank, uint receiptId, uint amount)public returns(bool success, uint id) {
+        int ret = 1;
         if(companies[to].isValid == false){
-            emit resultEvent(0,0);
+            ret = 0;
         }
-
         if(companies[bank].isValid == false){
-            emit resultEvent(0,0);
+            ret = 0;
         }
-
         if(receiptId > receiptsSize){
-            emit resultEvent(0,0);
+            ret = 0;
         }
-
         if(receipts[receiptId].to != to){
-            emit resultEvent(0,0);
+            ret = 0;
         }
-
         if(receipts[receiptId].amount < amount){
-            emit resultEvent(0,0);
+            ret = 0;
         }
-        // address to = msg.sender;
-        address from = receipts[receiptId].from;
-        companies[to].toReceive -= amount;
-        companies[bank].toReceive += amount;
 
-        receipts[receiptId].amount -= amount;
-        companies[bank].balance -= amount;
-        companies[to].balance += amount;
-        receiptsSize += 1;
-        id = receiptsSize;
-        // a new receipt to bankF
-        receipts[id] = Receipt(from, bank, amount, true);
-        success = true;
-        emit resultEvent(1,id);
+        // address to = msg.sender;
+        if(ret == 1){
+            address from = receipts[receiptId].from;
+            companies[to].toReceive -= amount;
+            companies[bank].toReceive += amount;
+
+            receipts[receiptId].amount -= amount;
+            companies[bank].balance -= amount;
+            companies[to].balance += amount;
+            receiptsSize += 1;
+            id = receiptsSize;
+            // a new receipt to bankF
+            receipts[id] = Receipt(from, bank, amount, true);
+            success = true;
+            emit resultEvent(1,id);
+        }else
+            emit resultEvent(0,0);
     }
 
     // pay a receipt
     function pay(address from, uint receiptId)public{
+        int ret = 1;
         address to = receipts[receiptId].to;
-        require(from == receipts[receiptId].from,"");
-        require(companies[from].balance >= receipts[receiptId].amount,"");
+        if(from != receipts[receiptId].from){
+            ret = 0;
+        }
+        if(companies[from].balance < receipts[receiptId].amount){
+            ret = 0;
+        }
         if(companies[to].isValid == false){
-            emit resultEvent(0,0);
+            ret = 0;
         }
-
         if(companies[from].isValid == false){
-            emit resultEvent(0,0);
+            ret = 0;
+        }
+        if(receiptId > receiptsSize){
+            ret = 0;
         }
 
-        if(receiptId > receiptsSize){
+        if (ret == 1){
+            companies[from].balance -= receipts[receiptId].amount;
+            companies[to].balance += receipts[receiptId].amount;
+            receipts[receiptId].amount = 0;
+            companies[from].toPay -= receipts[receiptId].amount;
+            companies[to].toReceive -= receipts[receiptId].amount;
+            emit resultEvent(1,1);
+        }else
             emit resultEvent(0,0);
-        }
-        companies[from].balance -= receipts[receiptId].amount;
-        companies[to].balance += receipts[receiptId].amount;
-        receipts[receiptId].amount = 0;
-        companies[from].toPay -= receipts[receiptId].amount;
-        companies[to].toReceive -= receipts[receiptId].amount;
-        emit resultEvent(1,0);
     }
 
     // inquire company's balance
