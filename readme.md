@@ -10,11 +10,13 @@
 
 ## 服务器
 
-[server](./server)
+[server](./server/)
 
 
 
 ## 链端
+
+[nodes](./nodes/)
 
 
 
@@ -32,13 +34,13 @@ git clone https://github.com/xiekch/Supply-Chain-Finance
 cd Supply-Chain-Finance
 ```
 
-运行fisco-bcos链端
+先运行fisco-bcos链端
 
 ```
 ./nodes/127.0.0.1/start_all.sh 
 ```
 
-运行服务器
+再运行服务器
 
 ```
 cd server
@@ -53,3 +55,5 @@ java -jar ./build/libs/server-0.0.1-SNAPSHOT.jar
 [report](./report/report.md)
 
 ## 演示视频
+
+[presentation](./report/presentation.mp4)
