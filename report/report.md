@@ -2,13 +2,13 @@
 
 2019年秋季学期
 
-课程名称：区块链原理与技术						任课教师： 郑子彬
+| 课程名称 | 区块链原理与技术 | 任课教师     | 郑子彬                                                       |
+| -------- | ---------------- | ------------ | ------------------------------------------------------------ |
+| 年级     | 17               | 专业（方向） | 软件工程                                                     |
+| 学号     | 16327109         | 姓名         | 谢昆成                                                       |
+| Email    | xiekch@qq.com    | github项目   | [Supply-Chain-Finance](https://github.com/xiekch/Supply-Chain-Finance) |
 
-16327109 谢昆成 软件工程
 
-Email: xiekch@qq.com
-
-github项目：[Supply-Chain-Finance](https://github.com/xiekch/Supply-Chain-Finance)
 
 ## 项目背景
 
@@ -84,6 +84,10 @@ balance 为结余，rate为信用评级，toPay 表示应支付，toReceive表�
 每次签发应收账款、转让应收账款、融资和支付都会新建一笔应收账款。从而实现应收账款可拆分、可溯源。
 
 ### 核心功能介绍
+
+- 注册登陆
+
+本项目是web应用，用户界面友好，操作方便简单。打开服务器并访问便可操作相应功能，通过对账户的管理实现权限控制和认证。
 
 - 新建企业
 
@@ -255,28 +259,151 @@ balance 为结余，rate为信用评级，toPay 表示应支付，toReceive表�
 
 ## 界面展示
 
-登陆注册页面
+登陆注册页面，美观简洁
 
 ![](../assets/login.png)
 
 
 
-主页
+主页，操作方便
 
 ![](../assets/main.png)
 
-调用合约结果反馈页面
+调用合约结果反馈页面，清晰明了
 
 ![](../assets/result.png)
 
 
 
+## 源代码说明
+
+本项目是一个web应用。基于java 的Springboot 开发，gradle构建工具。
+
+### 根目录：
+
+```
+nodes/ 		链端
+server/ 	服务器
+constracts/ 合约solidity源代码
+assets/ 	markdown文档使用的静态资源
+report/ 	报告文档
+.gitignore
+build_chain.sh 建链脚本
+LICENSE 	MIT协议
+readme.md
+```
+
+### 合约
+
+对合约的介绍见上[核心功能介绍](#核心功能介绍)中关于合约的部分。
+
+### Springboot
+
+构建springboot项目，可在[Spring initializer](https://start.spring.io/)中创建。
+
+springboot采用mvc架构，目录结构如下：
+
+```
+src/main/java/com/xiekch/server/ 存放源码
+	autoconfigure/ 			SDK配置
+	constants/ 				使用的常数
+	controller/ 			前端控制器，负责页面访问控制
+	domain/ 				模型model
+	service/ 				业务类代码
+	solidity/ 				合约编译成的java类
+	ServerApplication.java 	主类
+src/main/resources/ 		资源
+    static/ 				存放静态文件，比如css、js、image
+    templetes/ 				存放静态模板页面html
+    application.yml 		区块链节点配置文件
+    ca.crt					区块链节点证书
+    sdk.crt					区块链节点证书
+    sdk.key 				区块链节点密钥
+```
+
+对合约调用的处理主要由`src/main/java/com/xiekch/server/service/ContractsService.java`类处理。
+
+controller把前端的请求发送给service，由各service进行处理。MVC架构用一种业务逻辑、数据、界面显示分离的方法组织代码，实现了M和V的代码分离。
+
+### 配置SDK
+
+对SDK的配置主要在`application.yml`文件和`src/main/java/com/xiekch/server/autoconfigure/`下的配置类。
+
+FISCO BCOS作为联盟链，其SDK连接区块链节点需要通过证书(ca.crt、sdk.crt)和私钥(sdk.key)进行双向认证。因此需要将节点所在目录`nodes/${ip}/sdk`下的`ca.crt`、`sdk.crt`和`sdk.key`文件拷贝到项目的资源目录，供SDK与节点建立连接时使用。
+
+本Spring Boot项目中关于`application.yml`的配置如下所示。
+
+```
+encrypt-type: # 0：普通， 1：国密
+ encrypt-type: 0 
+ 
+group-channel-connections-config:
+  caCert: classpath:ca.crt
+  sslCert: classpath:sdk.crt
+  sslKey: classpath:sdk.key
+  all-channel-connections:
+  - group-id: 1  # 群组ID
+    connections-str:
+                    - 127.0.0.1:20200  # 节点，listen_ip:channel_listen_port
+                    - 127.0.0.1:20201
+                    - 127.0.0.1:20202
+                    - 127.0.0.1:20203
+
+channel-service:
+  group-id: 1 # sdk实际连接的群组
+  agency-name: agency # 机构名称
+```
+
+详细说明:
+
+- encryptType: 国密算法开关(默认为0)
+  - 0: 不使用国密算法发交易
+  - 1: 使用国密算法发交易(开启国密功能，需要连接的区块链节点是国密节点，搭建国密版FISCO BCOS区块链[参考这里](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/docs/manual/guomi_crypto.html))
+- groupChannelConnectionsConfig:
+  - 配置待连接的群组，可以配置一个或多个群组，每个群组需要配置群组ID
+  - 每个群组可以配置一个或多个节点，设置群组节点的配置文件**config.ini**中`[rpc]`部分的`listen_ip`和`channel_listen_port`。
+  - `caCert`用于配置链ca证书路径
+  - `sslCert`用于配置SDK所使用的证书路径
+  - `sslKey`用于配置SDK所使用的证书对应的私钥路径
+
+### 建链
+
+本项目已经包含了链端，且配置完毕。
+
+如果欲自己建链，则将nodes/删除，可使用根目录下的`build_chain.sh`搭建。例如执行下面的指令，生成一条单群组4节点的FISCO链。请确保机器的`30300~30303，20200~20203，8545~8548`端口没有被占用。
+
+```
+bash build_chain.sh -l "127.0.0.1:4" -p 30300,20200,8545
+```
+
+命令执行成功会输出`All completed`。如果执行出错，请检查`nodes/build.log`文件中的错误信息。建链成功后需按[配置SDK](#配置SDK)配置。
+
+具体说明参考[单群组FISCO BCOS联盟链的搭建](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/docs/installation.html)。
+
 ## 心得体会
 
-通过这次大作业，深入体验了基于FISCO-BCOS 的开发过程。个人感觉区块链项目开放与普通项目的不同是将对数据库的访问改成于区块链合约的访问调用。
+区块链是分布式的记账账本。具有防伪造、防篡改、可追溯的技术特性，有利于解决制造业中的设备管理、数据共享、多方信任协作、安全保障等问题，对于提升工业生产效率、降低成本，提升供应链协同水平和效率，以及促进管理创新和业务创新具有重要作用。
 
-这次项目基于java 的Springboot 开发。
+通过这次大作业，深入体验了基于FISCO-BCOS 的开发过程。个人感觉区块链项目开放与普通项目的不同是将对数据库的访问改成于区块链合约的访问调用。此外深刻认识区块链在供应链金融这个实际场景中的应用和价值。
+
+供应链金融将供应链上的每一笔交易和应收账款单据上链，同时引入第三方可信机构来确认这些信息的交易，例如银行，物流公司等，确保交易和单据的真实性。同时，支持应收账款的转让，融资，清算等，让核心企业的信用可以传递到供应链的下游企业，减小中小企业的融资难度。
 
 实验中遇到不少坑，主要是与合约配置和SDK调用相关。花了许多时间去debug。
 
 感觉SDK的文档不够清晰，很多函数不知道如何使用。
+
+
+
+## 完成的加分项
+
+- 友好高效的用户界面
+- 源代码及相关说明
+
+
+
+## 参考资料
+
+- [Java SDK](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/docs/sdk/java_sdk.html)
+
+- [Spring Boot Starter](https://github.com/FISCO-BCOS/spring-boot-starter/blob/master/doc/README_CN.md)
+
